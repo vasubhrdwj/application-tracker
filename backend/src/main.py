@@ -1,5 +1,8 @@
 from fastapi import FastAPI, Request
 from src.api.main import api_router
+from src.core.config import settings
+
+# models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
