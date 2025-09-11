@@ -1,20 +1,7 @@
 from fastapi import APIRouter
-from fastapi import FastAPI
-from pydantic import BaseModel
-from datetime import date
+from src.common.schemas import Application
 
 router = APIRouter(prefix="/applications", tags = ["applications"])
-
-
-# Define the Pydantic model for a Job Application
-class Application(BaseModel):
-    id: int
-    user_name: str
-    job_title: str
-    company: str
-    status: str = "applied"  # default status
-    date_applied: date = date.today()
-    notes: str | None = None
 
 # In-memory "database"
 applications: list[Application] = []

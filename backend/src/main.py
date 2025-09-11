@@ -1,8 +1,11 @@
 from fastapi import FastAPI, Request
 from src.api.main import api_router
 from src.core.config import settings
+from src.core.db import init_db
 
 app = FastAPI()
+
+init_db()
 
 @app.get("/")
 async def read_root():

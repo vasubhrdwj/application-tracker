@@ -4,7 +4,7 @@ from src.core.config import settings
 from typing import Union, Any
 
 DATABASE_URL = (
-    f"mysql+mysqlclient://{settings.DB_USER}:{settings.DB_PASSWORD}"
+    f"mysql+pymysql://{settings.DB_USER}:{settings.DB_PASSWORD}"
     f"@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
 )
 
