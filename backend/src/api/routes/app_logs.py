@@ -1,13 +1,17 @@
-from fastapi import APIRouter
+import json
+from fastapi import APIRouter, Depends
+from src.core.db import get_db
 from src.common.schemas import Application
+from src.common.models import Application as ApplicationModel
 
-router = APIRouter(prefix="/applications", tags = ["applications"])
+router = APIRouter(prefix="/applications", tags=["applications"])
 
-# In-memory "database"
-applications: list[Application] = []
 
-# Create endpoint: accepts an Application and returns it
-@router.post("/applicationlog/", response_model=Application)
-async def create_application(app_data: Application):
-    applications.append(app_data)
+@router.post("", response_model=Application)
+async def create_application(app_data: Application, db = Depends(get_db)):
+    data = app_data.model_dump()
+    db_app = ApplicationModel(**data)  
+    db.add(db_app)
+    db.commit()
+    # db.refresh(data)
     return app_data
