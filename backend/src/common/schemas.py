@@ -3,9 +3,7 @@ from datetime import date
 from pydantic import EmailStr, Field
 
 #Application Schema
-class ApplicationLog(BaseModel):
-    id: int
-    user_name: str
+class ApplicationBase(BaseModel):
     job_title: str
     company: str
     status: str = "applied"  # default status
@@ -21,4 +19,10 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str = Field(min_length=8)
+
+class UserOut(UserBase):
+    id: int
+
+    class Config:
+        orm_mode = True
 
