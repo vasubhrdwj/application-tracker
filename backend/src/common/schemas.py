@@ -16,7 +16,7 @@ class Application(BaseModel):
 #User Schema
 class UserBase(BaseModel):
     email: EmailStr
-    full_name: str | None = None
+    full_name: str | None = Field(default=None, max_length=100)
     is_active: bool = True
 
 class UserCreate(UserBase):
