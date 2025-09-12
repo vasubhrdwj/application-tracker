@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from src.core.db import get_db
-from src.common.schemas import UserCreate, UserOut
+from src.common.schemas import UserCreate, UserOut, UserUpdate
 from src.common.models import User
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -38,3 +38,21 @@ def get_user(user_id: int, db = Depends(get_db)):
         from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
+
+@router.patch("/{user_id}", response_model=UserOut)
+def update_user(user_id: int, data: UserUpdate, db = Depends(get_db)):
+    """ Update an existing user's information."""
+
+    user = db.query(User).filter(User.id == user_id)
+    user_instance = user.first()
+    if user_instance is None:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="User not found")
+
+    update_data = data.model_dump(exclude_unset=True)
+    user.update(update_data, synchronize_session=False)
+    
+    db.commit()
+    db.refresh(user_instance)
+    return user_instance
