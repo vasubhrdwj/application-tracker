@@ -3,7 +3,7 @@ from datetime import date
 from pydantic import EmailStr, Field
 
 #Application Schema
-class Application(BaseModel):
+class ApplicationLog(BaseModel):
     id: int
     user_name: str
     job_title: str
