@@ -4,6 +4,7 @@ from pydantic import EmailStr, Field
 
 #Application Schema
 class ApplicationBase(BaseModel):
+    user_name: str = "John Doe"
     job_title: str
     company: str
     status: str = "applied"  # default status
