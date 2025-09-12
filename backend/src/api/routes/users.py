@@ -56,3 +56,18 @@ def update_user(user_id: int, data: UserUpdate, db = Depends(get_db)):
     db.commit()
     db.refresh(user_instance)
     return user_instance
+
+
+@router.delete("/{user_id}", response_model=dict)
+def delete_user(user_id: int, db = Depends(get_db)):
+    """ Delete a user from the database."""
+
+    user = db.query(User).filter(User.id == user_id)
+    user_instance = user.first()
+    if user_instance is None:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="User not found")
+
+    user.delete(synchronize_session=False)
+    db.commit()
+    return {"detail": "User deleted successfully"}
