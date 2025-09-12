@@ -8,8 +8,11 @@ router = APIRouter(prefix="/users", tags=["Users"])
 @router.get("", response_model=list[UserOut])
 def get_users(db = Depends(get_db), skip: int = 0, limit: int = 20):
     """ Retrieve a list of users with pagination support."""
-    
+
     users = db.query(User).offset(skip).limit(limit).all()
+    if not users:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="No users found")
     return users
 
 @router.post("", response_model=UserOut)
@@ -24,3 +27,14 @@ async def create_user(data: UserCreate, db = Depends(get_db)):
     db.refresh(db_user)
 
     return db_user
+
+
+@router.get("/{user_id}", response_model=UserOut)
+def get_user(user_id: int, db = Depends(get_db)):
+    """ Retrieve a user by their ID."""
+
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
